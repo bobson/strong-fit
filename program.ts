@@ -73,21 +73,20 @@ export const DEFAULT_WEIGHTS: LiftWeights = {
 // ─── Default app state ────────────────────────────────────────────────────────
 
 export const DEFAULT_APP_STATE: AppState = {
-  program: "5x5",
-  nextWorkout: "A",
-  weights: DEFAULT_WEIGHTS,
-  failStreak: {},
-  assistanceConfig: { A: [], B: [] },
-  sessions: [],
+    current: "A",
+		previous: null,
+		weights: DEFAULT_WEIGHTS,
+		incrementKg: 2.5,
+		program: "5x5",
 };
 
 // ─── Rest timer duration (seconds) ───────────────────────────────────────────
 
-export const REST_SECONDS = {
-  main: 90,     // between main lift sets
-  deadlift: 180, // deadlift needs more recovery
-  assistance: 60,
-};
+// export const REST_SECONDS = {
+//   main: 90,     // between main lift sets
+//   deadlift: 180, // deadlift needs more recovery
+//   assistance: 60,
+// };
 
 // ─── Deload threshold ─────────────────────────────────────────────────────────
 
@@ -169,18 +168,15 @@ export function getNextWorkoutLabel(current: WorkoutLabel): WorkoutLabel {
 
 export function getNextWeights(
   weights: LiftWeights,
-  incrementKg: number,
   nextLabel: WorkoutLabel
 ): LiftWeights {
-  // Squat is in every workout so it always increments
-  // Other lifts only increment after they've been completed
   const liftIds = WORKOUT_LIFTS[nextLabel];
 
   return Object.fromEntries(
     Object.entries(weights).map(([liftId, weight]) => [
       liftId,
       liftIds.includes(liftId as MainLiftId)
-        ? weight + incrementKg
+        ? weight + MAIN_LIFTS[liftId as MainLiftId].incrementKg // uses per-lift increment
         : weight,
     ])
   ) as LiftWeights;

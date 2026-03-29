@@ -4,22 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import type { LiftWeights, ProgramScheme, WorkoutLabel } from "types";
 import { RestTimer } from "#/components/RestTimer";
 import SetCircle from "#/components/SetCircle";
+import { useApp } from "#/context/AppContext";
 
 export const Route = createFileRoute("/workout")({
+	validateSearch: (search: Record<string, unknown>) => ({
+		label: (search.label as WorkoutLabel) ?? "A",
+	}),
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	// TODO: get these from app state/context later
-	const initialLabel: WorkoutLabel = "A";
-	const weights: LiftWeights = {
-		squat: 20,
-		bench: 20,
-		row: 20,
-		"overhead-press": 20,
-		deadlift: 40,
-	};
-	const program: ProgramScheme = "5x5";
+	const { label: initialLabel } = Route.useSearch();
+
+	const { state } = useApp();
+
 	const restSeconds = 90;
 
 	const [label, setLabel] = useState<WorkoutLabel>(initialLabel);
@@ -73,7 +71,7 @@ function RouteComponent() {
 
 			<div className="flex flex-col gap-4">
 				{liftIds.map((liftId) => {
-					const { sets } = getSetsReps(liftId, program);
+					const { sets } = getSetsReps(liftId, state.program);
 					return (
 						<div
 							key={liftId}
@@ -84,7 +82,7 @@ function RouteComponent() {
 									{MAIN_LIFTS[liftId].name}
 								</span>
 								<span className="text-sm font-bold text-[var(--sea-ink-soft)]">
-									{weights[liftId]} kg
+									{state.weights[liftId]} kg
 								</span>
 							</div>
 							<div className="flex gap-3">

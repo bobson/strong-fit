@@ -145,12 +145,20 @@ export interface LiftWeights {
   deadlift: number;
 }
 
+// export interface AppState {
+//   program: ProgramScheme;
+//   nextWorkout: WorkoutLabel;
+//   weights: LiftWeights;
+ 
+//   failStreak: Partial<Record<MainLiftId, number>>;
+//   assistanceConfig: AssistanceConfig;
+//   sessions: CompletedSession[];
+// }
+
 export interface AppState {
-  program: ProgramScheme;
-  nextWorkout: WorkoutLabel;
+  current: WorkoutLabel;
+  previous: WorkoutLabel | null;
   weights: LiftWeights;
-  // tracks consecutive failures per lift for deload logic
-  failStreak: Partial<Record<MainLiftId, number>>;
-  assistanceConfig: AssistanceConfig;
-  sessions: CompletedSession[];
+  incrementKg: number;
+  program: ProgramScheme;
 }
