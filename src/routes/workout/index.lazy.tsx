@@ -5,7 +5,7 @@ import type { WorkoutLabel } from "types";
 import { RestTimer } from "#/components/RestTimer";
 
 import { useApp } from "#/context/AppContext";
-import SetCircle from "./SetCircle";
+import SetCircle from "../../components/SetCircle";
 
 export const Route = createLazyFileRoute("/workout/")({
 	component: RouteComponent,
@@ -32,8 +32,6 @@ function RouteComponent() {
 			]),
 		),
 	);
-
-	console.log(setsCount);
 
 	function handleLabelChange(newLabel: WorkoutLabel) {
 		setLabel(newLabel);
