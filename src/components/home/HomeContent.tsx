@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { getNextWeights } from "program";
-import type { AppState, WorkoutLabel } from "types";
+import { getNextWeights } from "../../../program";
+import type { AppState, WorkoutLabel } from "../../../types";
 import WorkoutCard from "./WorkoutCard";
 
 const HomeContent = ({ state }: { state: AppState }) => {
