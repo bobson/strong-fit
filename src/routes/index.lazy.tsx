@@ -3,9 +3,9 @@ import { useState } from "react";
 
 import { STORAGE_KEY, useApp } from "#/context/AppContext";
 
-import HomeContent from "./home/HomeContent";
-import ProgramSetup from "./home/ProgramSetup";
-import WeightsSetup from "./home/WeightsSetup";
+import HomeContent from "../components/home/HomeContent";
+import ProgramSetup from "../components/home/ProgramSetup";
+import WeightsSetup from "../components/home/WeightsSetup";
 
 export const Route = createLazyFileRoute("/")({ component: App });
 
