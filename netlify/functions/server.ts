@@ -1,6 +1,5 @@
-const mod = await import('../../dist/server/server.js')
-const server = mod.default || mod
+import server from '../../dist/server/server.js';
 
-export const handler = (event: any, context: any) => {
+export const handler = async (event: any, context: any) => {
   return server(event, context)
 }
