@@ -1,15 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { getSetsReps, MAIN_LIFTS, WORKOUT_LIFTS } from "program";
 import { useEffect, useRef, useState } from "react";
-import type { LiftWeights, ProgramScheme, WorkoutLabel } from "types";
+import type { WorkoutLabel } from "types";
 import { RestTimer } from "#/components/RestTimer";
-import SetCircle from "#/components/SetCircle";
-import { useApp } from "#/context/AppContext";
 
-export const Route = createFileRoute("/workout")({
-	validateSearch: (search: Record<string, unknown>) => ({
-		label: (search.label as WorkoutLabel) ?? "A",
-	}),
+import { useApp } from "#/context/AppContext";
+import SetCircle from "./SetCircle";
+
+export const Route = createLazyFileRoute("/workout/")({
 	component: RouteComponent,
 });
 
@@ -18,12 +16,51 @@ function RouteComponent() {
 
 	const { state } = useApp();
 
+	const navigate = useNavigate();
+
 	const restSeconds = 90;
 
 	const [label, setLabel] = useState<WorkoutLabel>(initialLabel);
 	const [timerActive, setTimerActive] = useState(false);
 	const [secondsRemaining, setSecondsRemaining] = useState(restSeconds);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+	const [setsCount, setSetsCount] = useState<Record<string, number>>(() =>
+		Object.fromEntries(
+			WORKOUT_LIFTS[initialLabel].map((liftId) => [
+				liftId,
+				getSetsReps(liftId, state.program).sets,
+			]),
+		),
+	);
+
+	console.log(setsCount);
+
+	function handleLabelChange(newLabel: WorkoutLabel) {
+		setLabel(newLabel);
+		navigate({
+			to: "/workout",
+			search: { label: newLabel },
+			replace: true, // replace instead of push so back button works correctly
+		});
+
+		// add missing lifts for the new workout label
+		setSetsCount((prev) => {
+			const newEntries = Object.fromEntries(
+				WORKOUT_LIFTS[newLabel].map((liftId) => [
+					liftId,
+					prev[liftId] ?? getSetsReps(liftId, state.program).sets,
+				]),
+			);
+			return { ...prev, ...newEntries };
+		});
+	}
+
+	function deleteSet(liftId: string) {
+		setSetsCount((prev) => ({
+			...prev,
+			[liftId]: Math.max(1, (prev[liftId] ?? 1) - 1), // minimum 1 set
+		}));
+	}
 
 	function startTimer() {
 		setSecondsRemaining(restSeconds);
@@ -62,7 +99,7 @@ function RouteComponent() {
 		<div className="page-wrap flex flex-col gap-6 py-8">
 			<select
 				value={label}
-				onChange={(e) => setLabel(e.target.value as WorkoutLabel)}
+				onChange={(e) => handleLabelChange(e.target.value as WorkoutLabel)}
 				className="island-shell rounded-xl px-4 py-2 text-sm font-semibold text-[var(--sea-ink)] w-fit"
 			>
 				<option value="A">Workout A — Squat, Bench, Row</option>
@@ -71,7 +108,7 @@ function RouteComponent() {
 
 			<div className="flex flex-col gap-4">
 				{liftIds.map((liftId) => {
-					const { sets } = getSetsReps(liftId, state.program);
+					// const { sets } = getSetsReps(liftId, state.program);
 					return (
 						<div
 							key={liftId}
@@ -86,12 +123,13 @@ function RouteComponent() {
 								</span>
 							</div>
 							<div className="flex gap-3">
-								{Array.from({ length: sets }).map((_, i) => (
+								{Array.from({ length: setsCount[liftId] }).map((_, i) => (
 									<SetCircle
 										// biome-ignore lint/suspicious/noArrayIndexKey: order is fixed
 										key={i}
 										onTimerStart={startTimer}
 										onTimerStop={stopTimer}
+										onDelete={() => deleteSet(liftId)}
 									/>
 								))}
 							</div>

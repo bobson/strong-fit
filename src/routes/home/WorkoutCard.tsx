@@ -1,5 +1,5 @@
+import { MAIN_LIFTS, WORKOUT_LIFTS } from "program";
 import type { LiftWeights, WorkoutLabel } from "types";
-import { MAIN_LIFTS, WORKOUT_LIFTS } from "../../program";
 
 interface WorkoutCardProps {
 	label: WorkoutLabel;

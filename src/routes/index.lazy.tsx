@@ -1,13 +1,13 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { DEFAULT_APP_STATE, DEFAULT_WEIGHTS } from "program";
-import { useEffect, useState } from "react";
-import type { LiftWeights, ProgramScheme, WorkoutLabel } from "types";
-import HomeContent from "#/components/HomeContent";
-import ProgramSetup from "#/components/ProgramSetup";
-import WeightsSetup from "#/components/WeightsSetup";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
 import { STORAGE_KEY, useApp } from "#/context/AppContext";
 
-export const Route = createFileRoute("/")({ component: App });
+import HomeContent from "./home/HomeContent";
+import ProgramSetup from "./home/ProgramSetup";
+import WeightsSetup from "./home/WeightsSetup";
+
+export const Route = createLazyFileRoute("/")({ component: App });
 
 type Step = "program" | "weights" | "home";
 
