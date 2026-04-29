@@ -1,35 +1,52 @@
 import { DEFAULT_APP_STATE } from "program";
 import { createContext, useContext, useEffect, useState } from "react";
 import type { AppState } from "types";
+import { loadUserState, saveUserState } from "#/lib/userState";
+import { useAuth } from "./AuthContext";
 
 export const STORAGE_KEY = "strongfit-app-state";
-
-function loadState(): AppState {
-	if (typeof window === "undefined") return DEFAULT_APP_STATE;
-	try {
-		const raw = localStorage.getItem(STORAGE_KEY);
-		return raw ? (JSON.parse(raw) as AppState) : DEFAULT_APP_STATE;
-	} catch {
-		return DEFAULT_APP_STATE;
-	}
-}
 
 const AppContext = createContext<{
 	state: AppState;
 	setState: React.Dispatch<React.SetStateAction<AppState>>;
+	hydrated: boolean;
 } | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-	const [state, setState] = useState(loadState);
+	const { user } = useAuth();
+	const [state, setState] = useState<AppState>(DEFAULT_APP_STATE);
+	const [hydrated, setHydrated] = useState(false);
 
-	// Sync to localStorage on every state change
+	// load state when user logs in
 	useEffect(() => {
-		if (!localStorage.getItem(STORAGE_KEY)) return; // setup not done yet
+		if (!user) {
+			setHydrated(true);
+			return;
+		}
+
+		loadUserState(user.id).then((savedState) => {
+			if (savedState) {
+				setState(savedState);
+			} else {
+				// first time user — check localStorage as fallback
+				try {
+					const raw = localStorage.getItem(STORAGE_KEY);
+					if (raw) setState(JSON.parse(raw) as AppState);
+				} catch {}
+			}
+			setHydrated(true);
+		});
+	}, [user]);
+
+	// save to Supabase and localStorage whenever state changes
+	useEffect(() => {
+		if (!hydrated) return;
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-	}, [state]);
+		if (user) saveUserState(user.id, state);
+	}, [state, hydrated, user]);
 
 	return (
-		<AppContext.Provider value={{ state, setState }}>
+		<AppContext.Provider value={{ state, setState, hydrated }}>
 			{children}
 		</AppContext.Provider>
 	);

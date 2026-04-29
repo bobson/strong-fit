@@ -1,8 +1,8 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
+import { LoginPage } from "#/components/LoginPage";
 import { STORAGE_KEY, useApp } from "#/context/AppContext";
-
+import { useAuth } from "#/context/AuthContext";
 import HomeContent from "../components/home/HomeContent";
 import ProgramSetup from "../components/home/ProgramSetup";
 import WeightsSetup from "../components/home/WeightsSetup";
@@ -12,18 +12,14 @@ export const Route = createLazyFileRoute("/")({ component: App });
 type Step = "program" | "weights" | "home";
 
 function App() {
-	const { state, setState } = useApp();
+	const { user, loading } = useAuth();
+	const { state, setState, hydrated } = useApp();
 	const [step, setStep] = useState<Step>("program"); // always "program" on server
-	const [hydrated, setHydrated] = useState(false);
-
-	useEffect(() => {
-		if (localStorage.getItem(STORAGE_KEY)) {
-			setStep("home");
-		}
-		setHydrated(true);
-	}, []);
 
 	if (!hydrated) return null;
+
+	// not logged in — show login page
+	if (!user) return <LoginPage />;
 
 	if (step === "program") {
 		return (
