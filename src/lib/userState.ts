@@ -23,12 +23,17 @@ export async function saveUserState(
 	userId: string,
 	state: AppState,
 ): Promise<void> {
-	await supabase.from("user_state").upsert({
-		user_id: userId,
-		program: state.program,
-		current_workout: state.current,
-		weights: state.weights,
-		increment_kg: state.incrementKg,
-		updated_at: new Date().toISOString(),
-	});
+	await supabase.from("user_state").upsert(
+		{
+			user_id: userId,
+			program: state.program,
+			current_workout: state.current,
+			weights: state.weights,
+			increment_kg: state.incrementKg,
+			updated_at: new Date().toISOString(),
+		},
+		{
+			onConflict: "user_id",
+		},
+	);
 }
