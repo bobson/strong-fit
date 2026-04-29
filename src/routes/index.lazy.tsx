@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { STORAGE_KEY, useApp } from "#/context/AppContext";
 
@@ -13,10 +13,17 @@ type Step = "program" | "weights" | "home";
 
 function App() {
 	const { state, setState } = useApp();
-	const [step, setStep] = useState<Step>(() => {
-		if (typeof window === "undefined") return "program";
-		return localStorage.getItem(STORAGE_KEY) ? "home" : "program";
-	});
+	const [step, setStep] = useState<Step>("program"); // always "program" on server
+	const [hydrated, setHydrated] = useState(false);
+
+	useEffect(() => {
+		if (localStorage.getItem(STORAGE_KEY)) {
+			setStep("home");
+		}
+		setHydrated(true);
+	}, []);
+
+	if (!hydrated) return null;
 
 	if (step === "program") {
 		return (

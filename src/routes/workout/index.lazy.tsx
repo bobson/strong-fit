@@ -1,7 +1,7 @@
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
 import { getSetsReps, MAIN_LIFTS, WORKOUT_LIFTS } from "program";
 import { useEffect, useRef, useState } from "react";
-import type { WorkoutLabel } from "types";
+import type { MainLiftId, WorkoutLabel } from "types";
 import { RestTimer } from "#/components/RestTimer";
 
 import { useApp } from "#/context/AppContext";
@@ -14,7 +14,7 @@ export const Route = createLazyFileRoute("/workout/")({
 function RouteComponent() {
 	const { label: initialLabel } = Route.useSearch();
 
-	const { state } = useApp();
+	const { state, setState } = useApp();
 
 	const navigate = useNavigate();
 
@@ -32,6 +32,16 @@ function RouteComponent() {
 			]),
 		),
 	);
+
+	function updateWeight(liftId: MainLiftId, delta: number) {
+		setState((prev) => ({
+			...prev,
+			weights: {
+				...prev.weights,
+				[liftId]: Math.max(0, prev.weights[liftId] + delta),
+			},
+		}));
+	}
 
 	function handleLabelChange(newLabel: WorkoutLabel) {
 		setLabel(newLabel);
@@ -116,9 +126,34 @@ function RouteComponent() {
 								<span className="font-semibold text-[var(--sea-ink)]">
 									{MAIN_LIFTS[liftId].name}
 								</span>
-								<span className="text-sm font-bold text-[var(--sea-ink-soft)]">
+								{/* <span className="text-sm font-bold text-[var(--sea-ink-soft)]">
 									{state.weights[liftId]} kg
-								</span>
+								</span> */}
+								<div className="flex items-center gap-2">
+									<button
+										type="button"
+										onClick={() => updateWeight(liftId, -2.5)}
+										className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
+      hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
+      cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
+									>
+										−
+									</button>
+
+									<span className="text-sm font-bold text-[var(--sea-ink-soft)]">
+										{state.weights[liftId]} kg
+									</span>
+
+									<button
+										type="button"
+										onClick={() => updateWeight(liftId, 2.5)}
+										className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
+      hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
+      cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
+									>
+										+
+									</button>
+								</div>
 							</div>
 							<div className="flex gap-3">
 								{Array.from({ length: setsCount[liftId] }).map((_, i) => (
@@ -136,7 +171,11 @@ function RouteComponent() {
 				})}
 			</div>
 
-			<RestTimer secondsRemaining={secondsRemaining} visible={timerActive} />
+			<RestTimer
+				secondsRemaining={secondsRemaining}
+				visible={timerActive}
+				onClose={stopTimer}
+			/>
 		</div>
 	);
 }

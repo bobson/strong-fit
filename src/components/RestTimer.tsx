@@ -4,9 +4,11 @@ import { memo } from "react";
 export const RestTimer = memo(function RestTimer({
 	secondsRemaining,
 	visible,
+	onClose,
 }: {
 	secondsRemaining: number;
 	visible: boolean;
+	onClose: () => void;
 }) {
 	if (!visible) return null;
 
@@ -19,6 +21,13 @@ export const RestTimer = memo(function RestTimer({
 			<p className="text-4xl font-bold text-[var(--lagoon-deep)]">
 				{mins}:{secs}
 			</p>
+			<button
+				type="button"
+				onClick={onClose}
+				className="mt-2 text-xs font-semibold text-[var(--sea-ink-soft)] hover:text-[var(--sea-ink)] cursor-pointer transition-colors"
+			>
+				Skip rest
+			</button>
 		</div>
 	);
 });
