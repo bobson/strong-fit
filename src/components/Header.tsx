@@ -14,6 +14,13 @@ export default function Header() {
 				>
 					Home
 				</Link>
+				<Link
+					to="/history"
+					className="nav-link"
+					activeProps={{ className: "nav-link is-active" }}
+				>
+					History
+				</Link>
 				<ThemeToggle />
 				<button
 					type="button"

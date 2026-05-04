@@ -7,12 +7,14 @@ interface SetCircleProps {
 	onTimerStart: () => void;
 	onTimerStop: () => void;
 	onDelete: () => void;
+	onComplete: (success: boolean) => void;
 }
 
 export default function SetCircle({
 	onTimerStart,
 	onTimerStop,
 	onDelete,
+	onComplete,
 }: SetCircleProps) {
 	const [count, setCount] = useState(5);
 	const [firstTouch, setFirstTouch] = useState(false);
@@ -31,11 +33,15 @@ export default function SetCircle({
 				setFirstTouch(false);
 				setCount(5);
 				onTimerStop();
+				onComplete(false);
 			} else {
+				const next = count - 1;
 				setCount((c) => c - 1);
+				if (next === 0) onComplete(false);
 			}
 		} else {
 			setFirstTouch(true);
+			onComplete(true); // first touch = completed all 5 reps
 		}
 	}
 

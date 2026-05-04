@@ -1,11 +1,10 @@
-import { createLazyFileRoute, useNavigate } from "@tanstack/react-router";
-import { getSetsReps, MAIN_LIFTS, WORKOUT_LIFTS } from "program";
-import { useEffect, useRef, useState } from "react";
-import type { MainLiftId, WorkoutLabel } from "types";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { MAIN_LIFTS } from "program";
+import { useEffect } from "react";
+import type { WorkoutLabel } from "types";
 import { RestTimer } from "#/components/RestTimer";
-
-import { useApp } from "#/context/AppContext";
-import SetCircle from "../../components/SetCircle";
+import SetCircle from "#/components/SetCircle";
+import { useWorkoutState } from "#/hooks/useWorkoutState";
 
 export const Route = createLazyFileRoute("/workout/")({
 	component: RouteComponent,
@@ -14,97 +13,44 @@ export const Route = createLazyFileRoute("/workout/")({
 function RouteComponent() {
 	const { label: initialLabel } = Route.useSearch();
 
-	const { state, setState } = useApp();
+	const {
+		label,
+		state,
+		liftIds,
+		setsCount,
+		timerActive,
+		secondsRemaining,
+		showConfirm,
+		timerRef,
+		hasAnySetCompleted,
+		handleLabelChange,
+		updateWeight,
+		deleteSet,
+		handleSetComplete,
+		startTimer,
+		stopTimer,
+		handleFinishClick,
+		handleFinishWorkout,
+		setShowConfirm,
+	} = useWorkoutState(initialLabel);
 
-	const navigate = useNavigate();
-
-	const restSeconds = 90;
-
-	const [label, setLabel] = useState<WorkoutLabel>(initialLabel);
-	const [timerActive, setTimerActive] = useState(false);
-	const [secondsRemaining, setSecondsRemaining] = useState(restSeconds);
-	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-	const [setsCount, setSetsCount] = useState<Record<string, number>>(() =>
-		Object.fromEntries(
-			WORKOUT_LIFTS[initialLabel].map((liftId) => [
-				liftId,
-				getSetsReps(liftId, state.program).sets,
-			]),
-		),
-	);
-
-	function updateWeight(liftId: MainLiftId, delta: number) {
-		setState((prev) => ({
-			...prev,
-			weights: {
-				...prev.weights,
-				[liftId]: Math.max(0, prev.weights[liftId] + delta),
-			},
-		}));
-	}
-
-	function handleLabelChange(newLabel: WorkoutLabel) {
-		setLabel(newLabel);
-		navigate({
-			to: "/workout",
-			search: { label: newLabel },
-			replace: true, // replace instead of push so back button works correctly
-		});
-
-		// add missing lifts for the new workout label
-		setSetsCount((prev) => {
-			const newEntries = Object.fromEntries(
-				WORKOUT_LIFTS[newLabel].map((liftId) => [
-					liftId,
-					prev[liftId] ?? getSetsReps(liftId, state.program).sets,
-				]),
-			);
-			return { ...prev, ...newEntries };
-		});
-	}
-
-	function deleteSet(liftId: string) {
-		setSetsCount((prev) => ({
-			...prev,
-			[liftId]: Math.max(1, (prev[liftId] ?? 1) - 1), // minimum 1 set
-		}));
-	}
-
-	function startTimer() {
-		setSecondsRemaining(restSeconds);
-		setTimerActive(true);
-	}
-
-	function stopTimer() {
-		setTimerActive(false);
-		setSecondsRemaining(restSeconds);
-	}
-
-	useEffect(() => {
-		if (!timerActive) {
-			if (timerRef.current) clearInterval(timerRef.current);
-			return;
-		}
-
-		timerRef.current = setInterval(() => {
-			setSecondsRemaining((prev) => {
-				if (prev <= 1) {
-					setTimerActive(false);
-					return restSeconds;
-				}
-				return prev - 1;
-			});
-		}, 1000);
-
-		return () => {
-			if (timerRef.current) clearInterval(timerRef.current);
-		};
-	}, [timerActive]);
-
-	const liftIds = WORKOUT_LIFTS[label];
+	// timer countdown
+	// useEffect(() => {
+	// 	if (!timerActive) {
+	// 		if (timerRef.current) clearInterval(timerRef.current);
+	// 		return
+	// 	}
+	// 	timerRef.current = setInterval(() => {
+	// 		handled inside hook via stopTimer
+	// 	}, 1000);
+	// 	return () => {
+	// 		if (timerRef.current) clearInterval(timerRef.current);
+	// 	}
+	// }, [timerActive, timerRef]);
 
 	return (
 		<div className="page-wrap flex flex-col gap-6 py-8">
+			{/* Workout selector */}
 			<select
 				value={label}
 				onChange={(e) => handleLabelChange(e.target.value as WorkoutLabel)}
@@ -114,62 +60,117 @@ function RouteComponent() {
 				<option value="B">Workout B — Squat, OHP, Deadlift</option>
 			</select>
 
+			{/* Lift cards */}
 			<div className="flex flex-col gap-4">
-				{liftIds.map((liftId) => {
-					// const { sets } = getSetsReps(liftId, state.program);
-					return (
-						<div
-							key={liftId}
-							className="island-shell rounded-2xl p-5 flex flex-col gap-4"
-						>
-							<div className="flex items-center justify-between">
-								<span className="font-semibold text-[var(--sea-ink)]">
-									{MAIN_LIFTS[liftId].name}
-								</span>
-								{/* <span className="text-sm font-bold text-[var(--sea-ink-soft)]">
+				{liftIds.map((liftId) => (
+					<div
+						key={liftId}
+						className="island-shell rounded-2xl p-5 flex flex-col gap-4"
+					>
+						<div className="flex items-center justify-between">
+							<span className="font-semibold text-[var(--sea-ink)]">
+								{MAIN_LIFTS[liftId].name}
+							</span>
+							<div className="flex items-center gap-2">
+								<button
+									type="button"
+									onClick={() => updateWeight(liftId, -2.5)}
+									className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
+                    hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
+                    cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
+								>
+									−
+								</button>
+								<span className="text-sm font-bold text-[var(--sea-ink-soft)] w-16 text-center">
 									{state.weights[liftId]} kg
-								</span> */}
-								<div className="flex items-center gap-2">
-									<button
-										type="button"
-										onClick={() => updateWeight(liftId, -2.5)}
-										className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
-      hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
-      cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
-									>
-										−
-									</button>
-
-									<span className="text-sm font-bold text-[var(--sea-ink-soft)]">
-										{state.weights[liftId]} kg
-									</span>
-
-									<button
-										type="button"
-										onClick={() => updateWeight(liftId, 2.5)}
-										className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
-      hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
-      cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
-									>
-										+
-									</button>
-								</div>
-							</div>
-							<div className="flex gap-3">
-								{Array.from({ length: setsCount[liftId] }).map((_, i) => (
-									<SetCircle
-										// biome-ignore lint/suspicious/noArrayIndexKey: order is fixed
-										key={i}
-										onTimerStart={startTimer}
-										onTimerStop={stopTimer}
-										onDelete={() => deleteSet(liftId)}
-									/>
-								))}
+								</span>
+								<button
+									type="button"
+									onClick={() => updateWeight(liftId, 2.5)}
+									className="size-7 rounded-full border border-[var(--line)] text-[var(--sea-ink-soft)]
+                    hover:border-[var(--lagoon-deep)] hover:text-[var(--lagoon-deep)]
+                    cursor-pointer font-bold transition-all flex items-center justify-center text-sm"
+								>
+									+
+								</button>
 							</div>
 						</div>
-					);
-				})}
+
+						<div className="flex gap-3">
+							{Array.from({ length: setsCount[liftId] }).map((_, i) => (
+								<SetCircle
+									// biome-ignore lint/suspicious/noArrayIndexKey: order is fixed
+									key={i}
+									onTimerStart={startTimer}
+									onTimerStop={stopTimer}
+									onDelete={() => deleteSet(liftId)}
+									onComplete={(success) =>
+										handleSetComplete(liftId, i, success)
+									}
+								/>
+							))}
+						</div>
+					</div>
+				))}
 			</div>
+
+			{/* Finish button */}
+			<button
+				type="button"
+				onClick={handleFinishClick}
+				disabled={!hasAnySetCompleted}
+				className={`island-shell rounded-2xl px-8 py-4 font-bold transition-all w-full text-center
+          ${
+						hasAnySetCompleted
+							? "text-[var(--lagoon-deep)] cursor-pointer hover:border-[var(--lagoon-deep)]"
+							: "text-[var(--sea-ink-soft)] opacity-50 cursor-not-allowed"
+					}`}
+			>
+				Finish Workout
+			</button>
+
+			{/* Confirmation modal */}
+			{showConfirm && (
+				<>
+					<div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" />
+					<div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+						<div className="island-shell rounded-2xl p-6 w-full max-w-sm flex flex-col gap-4">
+							<div>
+								<h2 className="font-bold text-lg text-[var(--sea-ink)]">
+									Finish Workout?
+								</h2>
+								<p className="text-sm text-[var(--sea-ink-soft)] mt-1">
+									You haven't logged all sets. Incomplete lifts will have their
+									weight decreased by 10% next session.
+								</p>
+							</div>
+							<div className="flex gap-3">
+								<button
+									type="button"
+									onClick={() => setShowConfirm(false)}
+									className="flex-1 island-shell rounded-xl py-3 text-sm font-semibold
+                    text-[var(--sea-ink-soft)] cursor-pointer hover:border-[var(--lagoon-deep)]
+                    transition-all text-center"
+								>
+									Cancel
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setShowConfirm(false);
+										handleFinishWorkout();
+									}}
+									className="flex-1 island-shell rounded-xl py-3 text-sm font-semibold
+                    text-[var(--lagoon-deep)] cursor-pointer hover:border-[var(--lagoon-deep)]
+                    transition-all text-center"
+								>
+									Finish
+								</button>
+							</div>
+						</div>
+					</div>
+				</>
+			)}
 
 			<RestTimer
 				secondsRemaining={secondsRemaining}

@@ -13,9 +13,12 @@ export async function loadUserState(userId: string): Promise<AppState | null> {
 	return {
 		current: data.current_workout,
 		previous: null,
+		previousWeights: data.previous_weights ?? null,
 		program: data.program,
 		weights: data.weights,
 		incrementKg: data.increment_kg,
+		failStreak: data.fail_streak ?? {},
+		setupComplete: data.setup_complete ?? false,
 	};
 }
 
@@ -30,6 +33,8 @@ export async function saveUserState(
 			current_workout: state.current,
 			weights: state.weights,
 			increment_kg: state.incrementKg,
+			fail_streak: state.failStreak,
+			setup_complete: state.setupComplete,
 			updated_at: new Date().toISOString(),
 		},
 		{

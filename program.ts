@@ -75,9 +75,12 @@ export const DEFAULT_WEIGHTS: LiftWeights = {
 export const DEFAULT_APP_STATE: AppState = {
     current: "A",
 		previous: null,
+    previousWeights: null,
 		weights: DEFAULT_WEIGHTS,
 		incrementKg: 2.5,
 		program: "5x5",
+    failStreak: {},
+    setupComplete: false,
 };
 
 // ─── Rest timer duration (seconds) ───────────────────────────────────────────

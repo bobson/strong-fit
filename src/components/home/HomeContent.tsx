@@ -20,7 +20,7 @@ const HomeContent = ({ state }: { state: AppState }) => {
 							label={state.previous}
 							variant="previous"
 							index={0}
-							weights={state.weights}
+							weights={state.previousWeights ?? state.weights}
 						/>
 					</Link>
 				)}

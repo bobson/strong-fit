@@ -20,6 +20,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 	// load state when user logs in
 	useEffect(() => {
 		if (!user) {
+			// still check localStorage for non-logged-in users
+			try {
+				const raw = localStorage.getItem(STORAGE_KEY);
+				if (raw) setState(JSON.parse(raw) as AppState);
+			} catch {}
 			setHydrated(true);
 			return;
 		}

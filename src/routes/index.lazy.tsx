@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginPage } from "#/components/LoginPage";
 import { STORAGE_KEY, useApp } from "#/context/AppContext";
 import { useAuth } from "#/context/AuthContext";
@@ -15,6 +15,13 @@ function App() {
 	const { user, loading } = useAuth();
 	const { state, setState, hydrated } = useApp();
 	const [step, setStep] = useState<Step>("program"); // always "program" on server
+
+	// once hydrated, skip setup if already completed
+	useEffect(() => {
+		if (hydrated && state.setupComplete) {
+			setStep("home");
+		}
+	}, [hydrated, state.setupComplete]);
 
 	if (!hydrated) return null;
 
@@ -36,7 +43,7 @@ function App() {
 			<WeightsSetup
 				onBack={() => setStep("program")}
 				onStart={(weights) => {
-					const newState = { ...state, weights };
+					const newState = { ...state, weights, setupComplete: true };
 					setState(newState);
 					// first time we write to localStorage — setup is complete
 					localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));

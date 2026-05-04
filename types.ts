@@ -158,7 +158,10 @@ export interface LiftWeights {
 export interface AppState {
   current: WorkoutLabel;
   previous: WorkoutLabel | null;
+  previousWeights: LiftWeights | null;
   weights: LiftWeights;
   incrementKg: number;
   program: ProgramScheme;
+  failStreak: Partial<Record<MainLiftId, number>>;
+  setupComplete: boolean;
 }
