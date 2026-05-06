@@ -12,22 +12,18 @@ const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getIte
 export const Route = createRootRoute({
 	head: () => ({
 		meta: [
-			{
-				charSet: "utf-8",
-			},
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1",
-			},
-			{
-				title: "Strong Fitness",
-			},
+			{ charSet: "utf-8" },
+			{ name: "viewport", content: "width=device-width, initial-scale=1" },
+			{ name: "theme-color", content: "#173a40" },
+			{ name: "apple-mobile-web-app-capable", content: "yes" },
+			{ name: "apple-mobile-web-app-status-bar-style", content: "default" },
+			{ name: "apple-mobile-web-app-title", content: "Strong Fit" },
+			{ title: "Strong Fit" },
 		],
 		links: [
-			{
-				rel: "stylesheet",
-				href: appCss,
-			},
+			{ rel: "stylesheet", href: appCss },
+			{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+			{ rel: "manifest", href: "/manifest.webmanifest" },
 		],
 	}),
 	shellComponent: RootDocument,
