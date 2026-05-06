@@ -31,15 +31,15 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-wide.png",
-      "sizes": "1215x1255",
+      "src": "/screenshot-2026-05-06-14-45-30.png",
+      "sizes": "1280×720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Strong Fit workout tracker"
     },
     {
-      "src": "/screenshot-mobile.png",
-      "sizes": "450x950",
+      "src": "/screenshot-2026-05-06-14-44-46.png",
+      "sizes": "390×844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Strong Fit on mobile"
