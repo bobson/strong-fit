@@ -28,21 +28,5 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280×720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Strong Fit workout tracker"
-    },
-    {
-      "src": "/screenshot-mobule.png",
-      "sizes": "390×844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Strong Fit on mobile"
-    }
   ]
 }
