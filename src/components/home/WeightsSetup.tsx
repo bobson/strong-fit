@@ -25,7 +25,7 @@ export default function WeightsSetup({ onBack, onStart }: WeightsSetupProps) {
 	}
 
 	return (
-		<main className="page-wrap flex flex-col gap-8 pt-14">
+		<div className="page-wrap flex flex-col gap-8 pt-10">
 			<div>
 				<h1 className="display-title text-3xl text-[var(--sea-ink)]">
 					Starting weights
@@ -101,6 +101,6 @@ export default function WeightsSetup({ onBack, onStart }: WeightsSetupProps) {
 					Start training →
 				</button>
 			</div>
-		</main>
+		</div>
 	);
 }

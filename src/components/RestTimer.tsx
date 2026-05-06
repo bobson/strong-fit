@@ -16,18 +16,23 @@ export const RestTimer = memo(function RestTimer({
 	const secs = String(secondsRemaining % 60).padStart(2, "0");
 
 	return (
-		<div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 island-shell rounded-2xl px-8 py-4 text-center min-w-40">
-			<p className="island-kicker mb-1">Rest</p>
-			<p className="text-4xl font-bold text-[var(--lagoon-deep)]">
-				{mins}:{secs}
-			</p>
-			<button
-				type="button"
-				onClick={onClose}
-				className="mt-2 text-xs font-semibold text-[var(--sea-ink-soft)] hover:text-[var(--sea-ink)] cursor-pointer transition-colors"
-			>
-				Skip rest
-			</button>
+		<div className="flex justify-center sticky bottom-20">
+			<div className="island-shell rounded-2xl px-4 py-2 flex items-center gap-4">
+				<p className="island-kicker text-xs">Rest</p>
+				<p className="text-lg font-bold text-[var(--lagoon-deep)] tabular-nums">
+					{mins}:{secs}
+				</p>
+				<button
+					type="button"
+					onClick={onClose}
+					aria-label="Close timer"
+					className="size-6 rounded-full border border-[var(--line)] flex items-center
+          justify-center text-[var(--sea-ink-soft)] hover:border-[var(--lagoon-deep)]
+          hover:text-[var(--lagoon-deep)] cursor-pointer transition-all text-xs font-bold"
+				>
+					✕
+				</button>
+			</div>
 		</div>
 	);
 });

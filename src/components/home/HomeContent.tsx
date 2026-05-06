@@ -6,7 +6,7 @@ import WorkoutCard from "./WorkoutCard";
 const HomeContent = ({ state }: { state: AppState }) => {
 	const next: WorkoutLabel = state.current === "A" ? "B" : "A";
 	return (
-		<main className="page-wrap  pb-8 pt-14">
+		<main className="page-wrap">
 			<section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
 				{state.previous && (
 					<Link

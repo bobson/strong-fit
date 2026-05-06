@@ -5,9 +5,9 @@ export const Route = createFileRoute("/workout/")({
 	validateSearch: (search: Record<string, unknown>) => ({
 		label: (search.label as WorkoutLabel) ?? "A",
 	}),
-	component: RouteComponent,
+	// component: RouteComponent,
 });
 
-function RouteComponent() {
-	return <div>Hello "/workout/"!</div>;
-}
+// function RouteComponent() {
+// 	return <div>Hello "/workout/"!</div>;
+// }

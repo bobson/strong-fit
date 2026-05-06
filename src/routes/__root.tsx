@@ -40,10 +40,12 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
 				<AuthProvider>
-					<Header />
-					<AppProvider>{children}</AppProvider>
+					<AppProvider>
+						<Header />
+						<main className="pt-22 pb-20">{children}</main>
+						<BottomNav />
+					</AppProvider>
 				</AuthProvider>
-				<BottomNav />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

@@ -118,12 +118,12 @@ function RouteComponent() {
 	// }, [timerActive, timerRef]);
 
 	return (
-		<div className="page-wrap flex flex-col gap-6 py-8">
+		<div className="page-wrap flex flex-col gap-6">
 			{/* Workout selector */}
 			<select
 				value={label}
 				onChange={(e) => handleLabelChange(e.target.value as WorkoutLabel)}
-				className="island-shell rounded-xl px-4 py-2 text-sm font-semibold text-[var(--sea-ink)] w-fit"
+				className="island-shell rounded-xl px-4 py-2  text-sm font-semibold text-[var(--sea-ink)] w-fit"
 			>
 				<option value="A">Workout A — Squat, Bench, Row</option>
 				<option value="B">Workout B — Squat, OHP, Deadlift</option>

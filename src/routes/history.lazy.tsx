@@ -70,13 +70,13 @@ function HistoryPage() {
 
 	if (loading)
 		return (
-			<div className="page-wrap pt-14 text-[var(--sea-ink-soft)] text-sm">
+			<div className="page-wrap text-[var(--sea-ink-soft)] text-sm">
 				Loading...
 			</div>
 		);
 
 	return (
-		<div className="page-wrap flex flex-col gap-6 py-8 pt-20">
+		<div className="page-wrap flex flex-col gap-6">
 			<h1 className="display-title text-3xl text-[var(--sea-ink)]">History</h1>
 
 			{/* Calendar */}

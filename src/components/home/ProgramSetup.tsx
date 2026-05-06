@@ -11,7 +11,7 @@ export default function ProgramSetup({
 	onNext: () => void;
 }) {
 	return (
-		<main className="page-wrap flex flex-col items-center gap-8 pt-20">
+		<div className="page-wrap flex flex-col items-center gap-8 pt-10">
 			<h1 className="display-title text-3xl text-[var(--sea-ink)]">
 				Choose your program
 			</h1>
@@ -44,6 +44,6 @@ export default function ProgramSetup({
 			>
 				Next →
 			</button>
-		</main>
+		</div>
 	);
 }
