@@ -59,9 +59,9 @@ export default function ThemeToggle() {
 
 		// add transition class after hydration so theme change is animated
 		// but initial load is instant
-		// requestAnimationFrame(() => {
-		// 	document.documentElement.classList.add("theme-ready");
-		// });
+		requestAnimationFrame(() => {
+			document.documentElement.classList.add("theme-ready");
+		});
 	}, []);
 
 	function toggle() {
