@@ -1,9 +1,9 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { ServiceWorkerRegister } from "#/components/ServiceWorkerRegister";
 import { AppProvider } from "#/context/AppContext";
 import { AuthProvider } from "#/context/AuthContext";
-
 import Header from "../components/Header";
 import appCss from "../styles.css?url";
 
@@ -22,8 +22,8 @@ export const Route = createRootRoute({
 		],
 		links: [
 			{ rel: "stylesheet", href: appCss },
-			{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 			{ rel: "manifest", href: "/manifest.webmanifest" },
+			{ rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
 		],
 	}),
 	shellComponent: RootDocument,
@@ -54,6 +54,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						},
 					]}
 				/>
+				<ServiceWorkerRegister />
 				<Scripts />
 			</body>
 		</html>
