@@ -78,7 +78,7 @@ export default function ThemeToggle() {
 			type="button"
 			onClick={toggle}
 			aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-			className="relative flex items-center w-16 h-8 rounded-full p-1 cursor-pointer transition-all duration-100 border border-[var(--chip-line)]"
+			className="relative flex items-center w-16 h-8 rounded-full p-1 cursor-pointer border border-[var(--chip-line)]"
 			style={{ background: isDark ? "var(--sand)" : "var(--chip-bg)" }}
 		>
 			{/* Icons */}
@@ -91,11 +91,13 @@ export default function ThemeToggle() {
 
 			{/* Sliding knob */}
 			<span
-				className="absolute size-6 rounded-full shadow-sm transition-all duration-300 flex items-center justify-center"
+				className="absolute left-1 size-6 rounded-full shadow-sm flex items-center justify-center"
 				style={{
 					background: "var(--lagoon-deep)",
-					left: isDark ? "4px" : "calc(100% - 28px)",
 					color: "white",
+					transform: isDark ? "translateX(0)" : "translateX(32px)",
+					transition: "transform 0.1s ease",
+					willChange: "transform",
 				}}
 			>
 				{isDark ? <MoonIcon /> : <SunIcon />}

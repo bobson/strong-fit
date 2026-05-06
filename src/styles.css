@@ -228,6 +228,10 @@ a {
     transform 180ms ease;
 }
 
+button {
+  touch-action: manipulation;
+}
+
 .island-kicker {
   letter-spacing: 0.16em;
   text-transform: uppercase;
