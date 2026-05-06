@@ -141,7 +141,7 @@ body::after {
   mask-image: radial-gradient(circle at 50% 30%, black, transparent 78%);
 }
 
-.theme-ready,
+/* .theme-ready,
 .theme-ready body,
 .theme-ready .island-shell,
 .theme-ready header,
@@ -150,7 +150,7 @@ body::after {
     background-color 0.1s ease,
     color 0.1s ease,
     border-color 0.1s ease;
-}
+} */
 
 a {
   color: var(--lagoon-deep);
