@@ -11,7 +11,7 @@
 
 @font-face {
   font-family: "Fraunces";
-  src: url("/assets/fonts/Fraunces-VariableFont.ttf") format("truetype");
+  src: url("/assets/fonts/Fraunces-VariableFont_wght.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
