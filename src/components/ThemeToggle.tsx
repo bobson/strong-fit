@@ -78,7 +78,7 @@ export default function ThemeToggle() {
 			type="button"
 			onClick={toggle}
 			aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-			className="relative flex items-center w-16 h-8 rounded-full p-1 cursor-pointer transition-all duration-300 border border-[var(--chip-line)]"
+			className="relative flex items-center w-16 h-8 rounded-full p-1 cursor-pointer transition-all duration-100 border border-[var(--chip-line)]"
 			style={{ background: isDark ? "var(--sand)" : "var(--chip-bg)" }}
 		>
 			{/* Icons */}
