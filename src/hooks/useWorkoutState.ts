@@ -5,7 +5,7 @@ import {
 	MAIN_LIFTS,
 	WORKOUT_LIFTS,
 } from "program";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { MainLiftId, WorkoutLabel } from "types";
 import { useApp } from "#/context/AppContext";
 import { useAuth } from "#/context/AuthContext";
@@ -77,44 +77,46 @@ export function useWorkoutState(initialLabel: WorkoutLabel) {
 		}));
 	}
 
-	function updateWeight(liftId: MainLiftId, delta: number) {
-		setState((prev) => ({
-			...prev,
-			weights: {
-				...prev.weights,
-				[liftId]: Math.max(0, prev.weights[liftId] + delta),
-			},
-		}));
-	}
+	const handleSetComplete = useCallback(
+		(liftId: string, setIndex: number, success: boolean) => {
+			setLiftSuccess((prev) => {
+				const updated = [...(prev[liftId] ?? [])];
+				updated[setIndex] = success;
+				return { ...prev, [liftId]: updated };
+			});
+		},
+		[],
+	);
 
-	function deleteSet(liftId: string) {
+	const deleteSet = useCallback((liftId: string) => {
 		setSetsCount((prev) => ({
 			...prev,
 			[liftId]: Math.max(1, (prev[liftId] ?? 1) - 1),
 		}));
-	}
+	}, []);
 
-	function handleSetComplete(
-		liftId: string,
-		setIndex: number,
-		success: boolean,
-	) {
-		setLiftSuccess((prev) => {
-			const updated = [...(prev[liftId] ?? [])];
-			updated[setIndex] = success;
-			return { ...prev, [liftId]: updated };
-		});
-	}
+	const updateWeight = useCallback(
+		(liftId: MainLiftId, delta: number) => {
+			setState((prev) => ({
+				...prev,
+				weights: {
+					...prev.weights,
+					[liftId]: Math.max(0, prev.weights[liftId] + delta),
+				},
+			}));
+		},
+		[setState],
+	);
 
-	function startTimer() {
+	const startTimer = useCallback(() => {
 		setSecondsRemaining(90);
 		setTimerActive(true);
-	}
+	}, []);
 
-	function stopTimer() {
+	const stopTimer = useCallback(() => {
 		setTimerActive(false);
 		setSecondsRemaining(90);
-	}
+	}, []);
 
 	const liftIds = WORKOUT_LIFTS[label];
 
