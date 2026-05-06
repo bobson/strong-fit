@@ -11,11 +11,23 @@
 import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as WorkoutIndexRouteImport } from './routes/workout/index'
 
 const IndexLazyRouteImport = createFileRoute('/')()
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/progress.lazy').then((d) => d.Route))
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -35,35 +47,57 @@ const WorkoutIndexRoute = WorkoutIndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/history': typeof HistoryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
   '/workout/': typeof WorkoutIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/history': typeof HistoryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
   '/workout': typeof WorkoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
   '/history': typeof HistoryRoute
+  '/progress': typeof ProgressRoute
+  '/settings': typeof SettingsRoute
   '/workout/': typeof WorkoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/history' | '/workout/'
+  fullPaths: '/' | '/history' | '/progress' | '/settings' | '/workout/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/history' | '/workout'
-  id: '__root__' | '/' | '/history' | '/workout/'
+  to: '/' | '/history' | '/progress' | '/settings' | '/workout'
+  id: '__root__' | '/' | '/history' | '/progress' | '/settings' | '/workout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   HistoryRoute: typeof HistoryRoute
+  ProgressRoute: typeof ProgressRoute
+  SettingsRoute: typeof SettingsRoute
   WorkoutIndexRoute: typeof WorkoutIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -91,6 +125,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   HistoryRoute: HistoryRoute,
+  ProgressRoute: ProgressRoute,
+  SettingsRoute: SettingsRoute,
   WorkoutIndexRoute: WorkoutIndexRoute,
 }
 export const routeTree = rootRouteImport

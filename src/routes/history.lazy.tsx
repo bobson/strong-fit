@@ -76,7 +76,7 @@ function HistoryPage() {
 		);
 
 	return (
-		<div className="page-wrap flex flex-col gap-6 py-8">
+		<div className="page-wrap flex flex-col gap-6 py-8 pt-20">
 			<h1 className="display-title text-3xl text-[var(--sea-ink)]">History</h1>
 
 			{/* Calendar */}
@@ -105,7 +105,7 @@ function HistoryPage() {
 				</div>
 
 				{/* Day labels */}
-				<div className="grid grid-cols-7 text-center">
+				<div className="grid grid-cols-7 text-center ">
 					{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
 						<span
 							key={d}
@@ -117,7 +117,7 @@ function HistoryPage() {
 				</div>
 
 				{/* Calendar grid */}
-				<div className="grid grid-cols-7 gap-1">
+				<div className="grid grid-cols-7 gap-3">
 					{/* empty cells before first day */}
 					{Array.from({ length: firstDay }).map((_, i) => (
 						<div
@@ -145,18 +145,18 @@ function HistoryPage() {
 									session && setSelected(isSelected ? null : session)
 								}
 								className={`
-                  aspect-square rounded-xl flex flex-col items-center justify-center gap-1
-                  text-sm font-semibold transition-all
-                  ${session ? "cursor-pointer hover:border-[var(--lagoon-deep)]" : "cursor-default"}
-                  ${isSelected ? "border-[var(--lagoon-deep)] bg-[var(--lagoon)]/10 border" : ""}
-                  ${isToday ? "border border-[var(--line)]" : ""}
-                  ${!session && !isToday ? "text-[var(--sea-ink-soft)]" : "text-[var(--sea-ink)]"}
-                `}
+    aspect-square rounded-full flex flex-col items-center justify-center gap-0.5
+    text-xs font-semibold transition-all max-w-9
+    ${session ? "cursor-pointer hover:border-[var(--lagoon-deep)]" : "cursor-default"}
+    ${isSelected ? "border-[var(--lagoon-deep)] bg-[var(--lagoon)]/10 border" : ""}
+    ${isToday ? "border border-[var(--line)]" : ""}
+    ${!session && !isToday ? "text-[var(--sea-ink-soft)]" : "text-[var(--sea-ink)]"}
+  `}
 							>
 								{day}
 								{session && (
 									<span
-										className={`size-1.5 rounded-full ${
+										className={`size-1 rounded-full ${
 											allSuccess
 												? "bg-[var(--palm)]"
 												: "bg-[var(--lagoon-deep)]"
