@@ -15,9 +15,9 @@ export const Route = createRootRoute({
 			{ charSet: "utf-8" },
 			{ name: "viewport", content: "width=device-width, initial-scale=1" },
 			{ name: "theme-color", content: "#173a40" },
-			{ name: "mobile-web-app-capable-capable", content: "yes" },
-			{ name: "mobile-web-app-capable-status-bar-style", content: "default" },
-			{ name: "mobile-web-app-capable-title", content: "Strong Fit" },
+			{ name: "mobile-web-app-capable", content: "yes" },
+			{ name: "mobile-web-app-status-bar-style", content: "default" },
+			{ name: "mobile-web-app-title", content: "Strong Fit" },
 			{ title: "Strong Fit" },
 		],
 		links: [
