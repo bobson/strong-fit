@@ -17,7 +17,7 @@ export default function Header() {
 			className="fixed top-0 left-0 right-0 z-30"
 			style={{
 				background: "var(--header-bg)",
-				backdropFilter: "blur(8px)",
+				// backdropFilter: "blur(8px)",
 				borderBottom: "1px solid var(--line)",
 			}}
 		>
