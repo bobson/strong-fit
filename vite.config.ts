@@ -23,17 +23,6 @@ const config = defineConfig({
 		// 	filename: "bundle-analysis.html",
 		// }),
 	],
-	build: {
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					supabase: ["@supabase/supabase-js"],
-					react: ["react", "react-dom"],
-					router: ["@tanstack/react-router"],
-				},
-			},
-		},
-	},
 });
 
 export default config;
