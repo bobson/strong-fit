@@ -3,6 +3,7 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
+// import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -12,10 +13,27 @@ const config = defineConfig({
 		devtools(),
 		tsconfigPaths({ projects: ["./tsconfig.json"] }),
 		tailwindcss(),
-		tanstackStart(),
+		tanstackStart({}),
 		nitro(),
 		viteReact(),
+		// visualizer({
+		// 	open: true,
+		// 	gzipSize: true,
+		// 	brotliSize: true,
+		// 	filename: "bundle-analysis.html",
+		// }),
 	],
+	build: {
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					supabase: ["@supabase/supabase-js"],
+					react: ["react", "react-dom"],
+					router: ["@tanstack/react-router"],
+				},
+			},
+		},
+	},
 });
 
 export default config;
