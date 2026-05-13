@@ -25,7 +25,7 @@ export default function WeightsSetup({ onBack, onStart }: WeightsSetupProps) {
 	}
 
 	return (
-		<div className="page-wrap flex flex-col gap-8 pt-10">
+		<div className="page-wrap flex flex-col gap-8">
 			<div>
 				<h1 className="display-title text-3xl text-[var(--sea-ink)]">
 					Starting weights

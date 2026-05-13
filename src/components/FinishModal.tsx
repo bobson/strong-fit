@@ -1,5 +1,3 @@
-import React from "react";
-
 interface FinishModalProps {
 	setShowConfirm: (show: boolean) => void;
 	handleFinishWorkout: () => void;
